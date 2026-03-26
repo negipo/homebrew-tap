@@ -1,0 +1,44 @@
+name: Update Cask
+
+on:
+  repository_dispatch:
+    types: [update-mdv]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version (e.g. 2026.03.25.1)"
+        required: true
+      sha256:
+        description: "SHA256 of the DMG"
+        required: true
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Update Cask
+        run: |
+          if [ "${{ github.event_name }}" = "repository_dispatch" ]; then
+            VERSION="${{ github.event.client_payload.version }}"
+            SHA256="${{ github.event.client_payload.sha256 }}"
+          else
+            VERSION="${{ github.event.inputs.version }}"
+            SHA256="${{ github.event.inputs.sha256 }}"
+          fi
+          sed -i "s/version \".*\"/version \"${VERSION}\"/" Casks/mdv.rb
+          sed -i "s/sha256 \".*\"/sha256 \"${SHA256}\"/" Casks/mdv.rb
+
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add Casks/mdv.rb
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            VERSION="${{ github.event.client_payload.version }}${{ github.event.inputs.version }}"
+            git commit -m "update mdv to ${VERSION}"
+            git push
+          fi
