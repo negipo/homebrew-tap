@@ -1,6 +1,6 @@
 cask "mdv" do
-  version "2026.04.02.1"
-  sha256 "ab0ff6e8333aa0b2c4488015699c558caae3e4161f6df2a9ca8e54f195bdc724"
+  version "2026.04.02.2"
+  sha256 "bfcfe68112f52f652e9730e8ae57d1f07b9d0aa3b820063a3acbecd52034a059"
 
   url "https://github.com/negipo/mdv/releases/download/v#{version}/mdv-#{version}-macos.dmg"
   name "mdv"
