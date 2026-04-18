@@ -1,6 +1,6 @@
 cask "ccfocus" do
-  version "2026.04.18.3"
-  sha256 "51813dc36a60f12085682495cd2b02201fd73f6a28ba9f0788601a61e2ed0561"
+  version "2026.04.18.4"
+  sha256 "361c83bdb110bdf6b0dd80060ff176ebdb433fa09aa867df9c6e1065587787fe"
 
   url "https://github.com/negipo/ccfocus/releases/download/v#{version}/ccfocus-#{version}-macos.dmg"
   name "ccfocus"
