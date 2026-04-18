@@ -28,6 +28,12 @@ cask "ccfocus" do
                    args: ["uninstall"]
   end
 
+  zap trash: [
+    "~/Library/Application Support/ccfocus",
+    "~/Library/Caches/com.negipo.ccfocus-app",
+    "~/Library/Preferences/com.negipo.ccfocus-app.plist",
+  ]
+
   caveats <<~EOS
     ccfocus is not signed with an Apple Developer ID. The installer clears the
     quarantine attribute automatically so Gatekeeper will not block the app.
@@ -36,10 +42,4 @@ cask "ccfocus" do
     To start the menu bar app:
       open /Applications/ccfocus-app.app
   EOS
-
-  zap trash: [
-    "~/Library/Application Support/ccfocus",
-    "~/Library/Preferences/com.negipo.ccfocus-app.plist",
-    "~/Library/Caches/com.negipo.ccfocus-app",
-  ]
 end
