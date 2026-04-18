@@ -2,9 +2,12 @@ name: Update Cask
 
 on:
   repository_dispatch:
-    types: [update-mdv]
+    types: [update-mdv, update-ccfocus]
   workflow_dispatch:
     inputs:
+      cask:
+        description: "Cask name (mdv, ccfocus)"
+        required: true
       version:
         description: "Version (e.g. 2026.03.25.1)"
         required: true
@@ -20,27 +23,38 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Update Cask
+      - name: Resolve cask name
+        id: resolve
         run: |
           if [ "${{ github.event_name }}" = "repository_dispatch" ]; then
+            CASK="${{ github.event.action }}"
+            CASK="${CASK#update-}"
             VERSION="${{ github.event.client_payload.version }}"
             SHA256="${{ github.event.client_payload.sha256 }}"
           else
+            CASK="${{ github.event.inputs.cask }}"
             VERSION="${{ github.event.inputs.version }}"
             SHA256="${{ github.event.inputs.sha256 }}"
           fi
-          sed -i "s/version \".*\"/version \"${VERSION}\"/" Casks/mdv.rb
-          sed -i "s/sha256 \".*\"/sha256 \"${SHA256}\"/" Casks/mdv.rb
+          echo "cask=$CASK" >> "$GITHUB_OUTPUT"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "sha256=$SHA256" >> "$GITHUB_OUTPUT"
+
+      - name: Update Cask
+        run: |
+          CASK_FILE="Casks/${{ steps.resolve.outputs.cask }}.rb"
+          test -f "$CASK_FILE" || { echo "cask file not found: $CASK_FILE"; exit 1; }
+          sed -i "s/version \".*\"/version \"${{ steps.resolve.outputs.version }}\"/" "$CASK_FILE"
+          sed -i "s/sha256 \".*\"/sha256 \"${{ steps.resolve.outputs.sha256 }}\"/" "$CASK_FILE"
 
       - name: Commit and push
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add Casks/mdv.rb
+          git add "Casks/${{ steps.resolve.outputs.cask }}.rb"
           if git diff --cached --quiet; then
             echo "No changes to commit"
           else
-            VERSION="${{ github.event.client_payload.version }}${{ github.event.inputs.version }}"
-            git commit -m "update mdv to ${VERSION}"
+            git commit -m "update ${{ steps.resolve.outputs.cask }} to ${{ steps.resolve.outputs.version }}"
             git push
           fi
