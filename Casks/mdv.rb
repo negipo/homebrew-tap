@@ -12,10 +12,15 @@ cask "mdv" do
   app "mdv.app"
   binary "#{appdir}/mdv.app/Contents/Resources/bin/mdv"
 
+  postflight do
+    system_command "/usr/bin/xattr",
+                   args: ["-dr", "com.apple.quarantine", "#{appdir}/mdv.app"],
+                   sudo: false
+  end
+
   caveats <<~EOS
-    mdv is not signed with an Apple Developer ID.
-    After installation, run the following to remove the quarantine attribute:
-      xattr -dr com.apple.quarantine /Applications/mdv.app
+    mdv is not signed with an Apple Developer ID. The installer clears the
+    quarantine attribute automatically so Gatekeeper will not block the app.
   EOS
 
   zap trash: [
