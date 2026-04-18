@@ -9,29 +9,29 @@ cask "ccfocus" do
 
   depends_on macos: ">= :ventura"
 
-  app "ccfocus-app.app"
-  binary "#{appdir}/ccfocus-app.app/Contents/Resources/bin/ccfocus-logger"
+  app "ccfocus.app"
+  binary "#{appdir}/ccfocus.app/Contents/Resources/bin/ccfocus-logger"
 
   postflight do
     system_command "/usr/bin/xattr",
-                   args: ["-dr", "com.apple.quarantine", "#{appdir}/ccfocus-app.app"],
+                   args: ["-dr", "com.apple.quarantine", "#{appdir}/ccfocus.app"],
                    sudo: false
-    system_command "#{appdir}/ccfocus-app.app/Contents/Resources/bin/ccfocus-logger",
+    system_command "#{appdir}/ccfocus.app/Contents/Resources/bin/ccfocus-logger",
                    args: ["install"]
   end
 
   uninstall_preflight do
     system_command "/usr/bin/xattr",
-                   args: ["-dr", "com.apple.quarantine", "#{appdir}/ccfocus-app.app"],
+                   args: ["-dr", "com.apple.quarantine", "#{appdir}/ccfocus.app"],
                    sudo: false
-    system_command "#{appdir}/ccfocus-app.app/Contents/Resources/bin/ccfocus-logger",
+    system_command "#{appdir}/ccfocus.app/Contents/Resources/bin/ccfocus-logger",
                    args: ["uninstall"]
   end
 
   zap trash: [
     "~/Library/Application Support/ccfocus",
-    "~/Library/Caches/com.negipo.ccfocus-app",
-    "~/Library/Preferences/com.negipo.ccfocus-app.plist",
+    "~/Library/Caches/com.negipo.ccfocus",
+    "~/Library/Preferences/com.negipo.ccfocus.plist",
   ]
 
   caveats <<~EOS
@@ -40,6 +40,6 @@ cask "ccfocus" do
 
     Claude Code hooks are registered automatically into ~/.claude/settings.json.
     To start the menu bar app:
-      open /Applications/ccfocus-app.app
+      open /Applications/ccfocus.app
   EOS
 end
