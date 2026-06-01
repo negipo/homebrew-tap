@@ -2,11 +2,11 @@ name: Update Cask
 
 on:
   repository_dispatch:
-    types: [update-mdv, update-ccfocus]
+    types: [update-mdv, update-ccfocus, update-ainote-haiteku]
   workflow_dispatch:
     inputs:
       cask:
-        description: "Cask name (mdv, ccfocus)"
+        description: "Cask name (mdv, ccfocus, ainote-haiteku)"
         required: true
       version:
         description: "Version (e.g. 2026.03.25.1)"
