@@ -7,7 +7,7 @@ cask "mdv" do
   desc "Markdown viewer for macOS"
   homepage "https://github.com/negipo/mdv"
 
-  depends_on macos: ">= :sonoma"
+  depends_on macos: :sonoma
 
   app "mdv.app"
   binary "#{appdir}/mdv.app/Contents/Resources/bin/mdv"

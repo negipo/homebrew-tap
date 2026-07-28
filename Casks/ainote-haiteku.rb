@@ -7,7 +7,7 @@ cask "ainote-haiteku" do
   desc "Menu bar app that plays ainote sounds unless a Google Meet tab is open"
   homepage "https://github.com/negipo/ainote-haiteku"
 
-  depends_on macos: ">= :sonoma"
+  depends_on macos: :sonoma
 
   app "ainote-haiteku.app"
 
