@@ -4,7 +4,7 @@ cask "mdv" do
 
   url "https://github.com/negipo/mdv/releases/download/v#{version}/mdv-#{version}-macos.dmg"
   name "mdv"
-  desc "Markdown viewer for macOS"
+  desc "Markdown viewer"
   homepage "https://github.com/negipo/mdv"
 
   depends_on macos: :sonoma
@@ -12,20 +12,19 @@ cask "mdv" do
   app "mdv.app"
   binary "#{appdir}/mdv.app/Contents/Resources/bin/mdv"
 
-  postflight do
-    system_command "/usr/bin/xattr",
-                   args: ["-dr", "com.apple.quarantine", "#{appdir}/mdv.app"],
-                   sudo: false
+  postflight_steps do
+    run "/usr/bin/xattr",
+        args: ["-dr", "com.apple.quarantine", "{{appdir}}/mdv.app"]
   end
+
+  zap trash: [
+    "~/Library/Application Support/mdv",
+    "~/Library/Caches/com.negipo.mdv",
+    "~/Library/Preferences/com.negipo.mdv.plist",
+  ]
 
   caveats <<~EOS
     mdv is not signed with an Apple Developer ID. The installer clears the
     quarantine attribute automatically so Gatekeeper will not block the app.
   EOS
-
-  zap trash: [
-    "~/Library/Application Support/mdv",
-    "~/Library/Preferences/com.negipo.mdv.plist",
-    "~/Library/Caches/com.negipo.mdv",
-  ]
 end

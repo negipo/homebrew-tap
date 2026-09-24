@@ -11,11 +11,12 @@ cask "ainote-haiteku" do
 
   app "ainote-haiteku.app"
 
-  postflight do
-    system_command "/usr/bin/xattr",
-                   args: ["-dr", "com.apple.quarantine", "#{appdir}/ainote-haiteku.app"],
-                   sudo: false
+  postflight_steps do
+    run "/usr/bin/xattr",
+        args: ["-dr", "com.apple.quarantine", "{{appdir}}/ainote-haiteku.app"]
   end
+
+  zap trash: "~/Library/Preferences/com.negipo.ainote-haiteku.plist"
 
   caveats <<~EOS
     ainote-haiteku is not signed with an Apple Developer ID. The installer clears
@@ -25,8 +26,4 @@ cask "ainote-haiteku" do
       - Accessibility (to observe key presses)
       - Automation > Google Chrome (to detect open Google Meet tabs)
   EOS
-
-  zap trash: [
-    "~/Library/Preferences/com.negipo.ainote-haiteku.plist",
-  ]
 end
